@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exercise.crm_ssm.mapper.BaseDictMapper">
+		<select id="queryBaseDictByDictTypeCode" parameterType="String" resultType="com.exercise.crm_ssm.pojo.BaseDict">
+		SELECT `base_dict`.`dict_id`,
+		    `base_dict`.`dict_type_code`,
+		    `base_dict`.`dict_type_name`,
+		    `base_dict`.`dict_item_name`,
+		    `base_dict`.`dict_item_code`,
+		    `base_dict`.`dict_sort`,
+		    `base_dict`.`dict_enable`,
+		    `base_dict`.`dict_memo`
+		FROM `crm_ssm`.`base_dict`
+		WHERE dict_type_code= #{dict_type_code};
+		</select>
+</mapper>
+	

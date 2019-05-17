@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exercise.crm_ssm.mapper.CustomerMapper">
+	<sql id="customerQueryVo">
+		<where>
+			<!--c.`cust_name` like '%马%'
+			and c.`cust_source` = 6
+			and c.`cust_industry`=2
+			and c.`cust_level`=22-->
+			<if test="custName != null and custName != ''">
+				and c.`cust_name` like '%${custName}%'
+			</if>
+			<if test="custSource != null and custSource != ''">
+				and c.`cust_source` = #{custSource}
+			</if>
+			<if test="custIndustry != null and custIndustry != ''">
+				and c.`cust_industry`=#{custIndustry}
+			</if>
+			<if test="custLevel != null and custLevel != ''">
+				and c.`cust_industry`=#{custLevel}
+			</if>
+		</where>
+	</sql>
+	<select id="queryCustomerByQueryVo" parameterType="com.exercise.crm_ssm.pojo.QueryVo" resultType="com.exercise.crm_ssm.pojo.Customer" >
+		SELECT c.`cust_id`,
+		    c.`cust_name`,
+		    c.`cust_user_id`,
+		    c.`cust_create_id`,
+			s.`dict_item_name` `cust_source`,
+		    i.`dict_item_name`  `cust_industry`,
+			l.`dict_item_name` `cust_level`,
+		    c.`cust_linkman`,
+		    c.`cust_phone`,
+		    c.`cust_mobile`,
+		    c.`cust_zipcode`,
+		    c.`cust_address`,
+		    c.`cust_createtime`
+		FROM `crm_ssm`.`customer` c
+		LEFT JOIN `crm_ssm`.`base_dict` s ON c.`cust_source` = s.`dict_id`
+		left join `crm_ssm`.`base_dict` i on c.`cust_industry` = i.`dict_id`
+		left join `crm_ssm`.`base_dict` l on c.`cust_level` = l.`dict_id`
+		<include refid="customerQueryVo"/>
+		<if test="start!=null">
+			limit #{start},#{rows}
+		</if>
+		
+	</select>
+	<select id="queryCountByQueryVo" parameterType="com.exercise.crm_ssm.pojo.QueryVo" resultType="int">
+		select count(1) from customer c
+		<include refid="customerQueryVo"/>
+	</select>
+	<select id="queryCustomerById" parameterType="int" resultType="com.exercise.crm_ssm.pojo.Customer">
+		SELECT `customer`.`cust_id`,
+		    `customer`.`cust_name`,
+		    `customer`.`cust_user_id`,
+		    `customer`.`cust_create_id`,
+		    `customer`.`cust_source`,
+		    `customer`.`cust_industry`,
+		    `customer`.`cust_level`,
+		    `customer`.`cust_linkman`,
+		    `customer`.`cust_phone`,
+		    `customer`.`cust_mobile`,
+		    `customer`.`cust_zipcode`,
+		    `customer`.`cust_address`,
+		    `customer`.`cust_createtime`
+		FROM `crm_ssm`.`customer`
+		where cust_id = #{id};
+	</select>
+	<select id="updatCustomerById" parameterType="com.exercise.crm_ssm.pojo.Customer">
+			UPDATE `crm_ssm`.`customer`
+			SET
+			<if test="cust_name != null and cust_name != ''">
+				`cust_name` = #{cust_name},
+			</if>
+			<if test="cust_user_id != null ">
+				`cust_user_id` = #{cust_user_id},
+			</if>
+			<if test="cust_create_id != null">
+				`cust_create_id` = #{cust_create_id},
+			</if>
+			<if test="cust_source != null and cust_source != ''">
+				`cust_source` = #{cust_source},
+			</if>
+			<if test="cust_industry != null and cust_industry != ''">
+				`cust_industry` = #{cust_industry},
+			</if>
+			<if test="cust_level != null and cust_level != ''">
+				`cust_level` = #{cust_level},
+			</if>
+			<if test="cust_linkman != null and cust_linkman != ''">
+				`cust_linkman` = #{cust_linkman},
+			</if>
+			<if test="cust_phone != null and cust_phone != ''">
+				`cust_phone` = #{cust_phone},
+			</if>
+			<if test="cust_mobile != null and cust_mobile != ''">
+				`cust_mobile` = #{cust_mobile},
+			</if>
+			<if test="cust_zipcode != null and cust_zipcode != ''">
+				`cust_zipcode` = #{cust_zipcode},
+			</if>
+			<if test="cust_address != null and cust_address != ''">
+				`cust_address` = #{cust_address},
+			</if>
+			`cust_createtime` = NOW()
+			WHERE `cust_id` = #{cust_id};
+	</select>
+	<delete id="deleteCustomerByid" parameterType="int">
+		DELETE FROM `crm_ssm`.`customer`
+		WHERE `cust_id` = #{cust_id};
+	</delete>
+</mapper>
+	
